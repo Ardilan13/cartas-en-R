@@ -100,7 +100,7 @@ play_turn <- function(money, deck) {
   }
 
   repeat {
-    choice <- as.numeric(readline(prompt = "¿Qué desea hacer? (1: Pedir otra carta, 2: Plantarse): ")) # nolint: line_length_linter.
+    choice <- as.numeric(readline(prompt = "¿Qué desea hacer? (1: Pedir otra carta, 2: Plantarse, 3: Retirarse): ")) # nolint: line_length_linter.
     if (choice == 1) {
       if (card_index <= length(deck)) {
         card_index <- card_index + 1 # Avanzar al siguiente índice de carta
@@ -134,6 +134,11 @@ play_turn <- function(money, deck) {
         }
         return(list(money = money))
       }
+    } else if (choice == 3) {
+      color_text("\nTe has retirado. Se ha devuelto su apuesta.", "yellow")
+      color_text(paste("Dinero retirado:", money), "green")
+      money <- 0
+      return(list(money = money))
     } else {
       color_text("Opción no válida. Intente nuevamente.", "red")
     }
