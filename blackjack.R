@@ -179,7 +179,7 @@ sum_cards_value <- function(cards) {
 # Inicio del juego
 money <- enter_money()
 if (!is.null(money)) {
-  setwd("C:/Users/Dilan/Documents/cartas-en-R")
+  setwd(".")
   deck <- read.csv("./cards.csv")
   deck <- build_deck(deck)
   while (money > 0) {
