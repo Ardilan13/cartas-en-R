@@ -263,7 +263,6 @@ play_turn <- function(money, deck, count) {
 # Inicio del juego
 money <- enter_money()
 if (!is.null(money)) {
-  setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) #Hace que el working directory sea la ubicacion del archivo
   deck <- read.csv("./cards.csv")
   deck <- build_deck(deck)
   count <- 0 # Inicializar el conteo de cartas
