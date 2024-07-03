@@ -116,22 +116,22 @@ recommend_action <- function(player_sum, dealer_upcard_value, count) {
   true_count <- count / 52 # True count en un mazo único
 
   if (player_sum <= 11) {
-    return("Recomendación: Pedir otra carta (Hit).")
+    return("Recomendación: Pedir otra carta.")
   } else if (player_sum >= 17) {
-    return("Recomendación: Plantarse (Stand).")
+    return("Recomendación: Plantarse.")
   } else if (player_sum >= 12 && player_sum <= 16) {
     if (dealer_upcard_value >= 7) {
-      return("Recomendación: Pedir otra carta (Hit).")
+      return("Recomendación: Pedir otra carta.")
     } else if (dealer_upcard_value >= 2 && dealer_upcard_value <= 6) {
       if (true_count >= 1) {
-        return("Recomendación: Pedir otra carta (Hit).") # nolint: line_length_linter.
+        return("Recomendación: Pedir otra carta.") # nolint: line_length_linter.
       } else if (true_count <= -1) {
-        return("Recomendación: Pedir otra carta (Hit).")
+        return("Recomendación: Pedir otra carta.")
       } else {
-        return("Recomendación: Plantarse (Stand).")
+        return("Recomendación: Plantarse.")
       }
     } else {
-      return("Recomendación: Plantarse (Stand).")
+      return("Recomendación: Plantarse.")
     }
   }
   return("Recomendación: Evaluar manualmente.")
@@ -245,8 +245,11 @@ play_turn <- function(money, deck, count) {
   color_text(paste("Suma final de cartas de la casa:", cards_sum_house), "magenta") # nolint: line_length_linter.
   Sys.sleep(0.5)
   # Comparar resultados
-  if (cards_sum_house >= 22 || cards_sum_player > cards_sum_house) {
-    money <- money + (bet * 2)
+  if (cards_sum_player == 21 && cards_sum_house != 21) {
+    money <- money + 1.5 * bet
+    color_text(paste("\n¡Blackjack! Has ganado 2.5 veces. Su dinero actual:", money), "green") # nolint
+  } else if (cards_sum_house >= 22 || cards_sum_player > cards_sum_house) {
+    money <- money + bet
     color_text(paste("\n¡Has ganado! Su dinero actual:", money), "green")
   } else if (cards_sum_player == cards_sum_house) {
     color_text(paste("\nEmpate. Su dinero actual:", money), "yellow")
@@ -274,7 +277,7 @@ if (!is.null(money)) {
       count <- turn_result$count
     }
   }
-  cat("Gracias por jugar!\n")
+  cat("Gracias por su dinero!\n")
 } else {
   cat("Juego cancelado. Ingresó un valor no válido.\n")
 }
