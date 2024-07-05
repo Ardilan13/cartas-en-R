@@ -30,12 +30,12 @@ is_positive_number <- function(value) {
 # Función para imprimir texto en colores específicos
 color_text <- function(text, color) {
   color_code <- switch(tolower(color),
-    red = "31",
-    green = "32",
-    yellow = "33",
-    blue = "34",
-    magenta = "35",
-    cyan = "36"
+                       red = "31",
+                       green = "32",
+                       yellow = "33",
+                       blue = "34",
+                       magenta = "35",
+                       cyan = "36"
   )
   cat(paste0("\033[1;", color_code, "m", text, "\033[0m\n"))
 }
@@ -114,7 +114,7 @@ update_count <- function(card, count) {
 # Función para recomendar acción basada en conteo y suma de cartas del jugador
 recommend_action <- function(player_sum, dealer_upcard_value, count) {
   true_count <- count / 52 # True count en un mazo único
-
+  
   if (player_sum <= 11) {
     return("Recomendación: Pedir otra carta.")
   } else if (player_sum >= 17) {
@@ -143,17 +143,17 @@ play_turn <- function(money, deck, count) {
   bet <- place_bet(money)$bet
   deck <- shuffle_deck(deck)
   card_index <- 5 # Índice de la próxima carta a repartir
-
+  
   # Repartir cartas al jugador
   dealt_cards_player <- deal_cards(deck, 2)
-
+  
   # Repartir cartas a la casa
   dealt_cards_house <- deal_cards(dealt_cards_player$remaining_deck, 2)
   color_text("\n- Cartas de la casa -", "yellow")
   color_text(paste(dealt_cards_house$cards_dealt[[1]]$card, ":", calculate_card_value(dealt_cards_house$cards_dealt[[1]])), "yellow") # nolint: line_length_linter.
   hidden_card <- dealt_cards_house$cards_dealt[[2]] # Carta oculta de la casa
   color_text("*** **** **** : **", "yellow")
-
+  
   color_text("\n- Cartas del jugador -", "cyan")
   for (card in dealt_cards_player$cards_dealt) {
     Sys.sleep(0.8)
@@ -161,23 +161,23 @@ play_turn <- function(money, deck, count) {
     count <- update_count(card, count) # Actualizar conteo para cartas del jugador # nolint: line_length_linter.
   }
   Sys.sleep(0.5)
-
+  
   # Calcular la suma de cartas del jugador
   cards_sum_player <- sum_cards_value(dealt_cards_player$cards_dealt)
   color_text(paste("Suma de cartas del jugador:", cards_sum_player), "magenta")
-
+  
   # Mostrar recomendación al jugador
   recommendation <- recommend_action(cards_sum_player, calculate_card_value(dealt_cards_house$cards_dealt[[1]]), count) # nolint
   cat("\n")
   color_text(recommendation, "blue")
-
+  
   if (cards_sum_player >= 22) {
     money <- money - bet
     color_text("Has perdido! La suma de tus cartas es mayor o igual a 22.", "red") # nolint: line_length_linter.
     color_text(paste("Su dinero actual:", money), "green")
     return(list(money = money, count = count))
   }
-
+  
   # Turno del jugador
   repeat {
     choice <- as.numeric(readline(prompt = "¿Qué desea hacer? (1: Pedir otra carta, 2: Plantarse, 3: Retirarse): ")) # nolint: line_length_linter.
@@ -220,7 +220,7 @@ play_turn <- function(money, deck, count) {
       color_text("Opción no válida. Intente nuevamente.", "red")
     }
   }
-
+  
   # Turno de la casa
   color_text("\n--- Turno de la casa ---", "yellow")
   color_text(paste("Primera carta de la casa: ", dealt_cards_house$cards_dealt[[1]]$card, ":", calculate_card_value(dealt_cards_house$cards_dealt[[1]])), "yellow") # nolint
@@ -229,7 +229,7 @@ play_turn <- function(money, deck, count) {
   for (card in dealt_cards_house$cards_dealt) {
     count <- update_count(card, count) # Actualizar conteo para cartas visibles de la casa # nolint: line_length_linter.
   }
-
+  
   cards_sum_house <- sum_cards_value(dealt_cards_house$cards_dealt)
   while (cards_sum_house < 17) {
     new_card <- deck[card_index]
@@ -240,7 +240,7 @@ play_turn <- function(money, deck, count) {
     count <- update_count(new_card[[1]], count) # Actualizar conteo para nueva carta de la casa # nolint
     card_index <- card_index + 1
   }
-
+  
   Sys.sleep(0.5)
   color_text(paste("Suma final de cartas de la casa:", cards_sum_house), "magenta") # nolint: line_length_linter.
   Sys.sleep(0.5)
